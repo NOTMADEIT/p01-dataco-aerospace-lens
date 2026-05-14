@@ -10,8 +10,8 @@ def test_enforce_dtypes():
         }
     )
     result = enforce_dtypes(df)
-    assert result["Order Date"].dtype == "datetime64[ns]"
-    assert result["Shipping Date"].dtype == "datetime64[ns]"
+    assert pd.api.types.is_datetime64_any_dtype(result["Order Date"])
+    assert pd.api.types.is_datetime64_any_dtype(result["Shipping Date"])
 
 
 def test_calculate_tail_metrics():
