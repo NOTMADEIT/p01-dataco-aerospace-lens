@@ -1,0 +1,23 @@
+[project]
+name = "p01-dataco-aerospace-lens"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "black>=26.3.1",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.9",
+    "networkx>=3.6.1",
+    "numpy>=2.4.4",
+    "pandas>=3.0.3",
+    "ruff>=0.15.12",
+    "seaborn>=0.13.2",
+    "streamlit>=1.57.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+]
