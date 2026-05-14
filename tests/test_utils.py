@@ -1,6 +1,5 @@
 import pandas as pd
-import pytest
-from src.utils import load_data, enforce_dtypes, calculate_tail_metrics
+from src.utils import enforce_dtypes, calculate_tail_metrics
 
 
 def test_enforce_dtypes():
