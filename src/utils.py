@@ -3,36 +3,41 @@ import numpy as np
 from pathlib import Path
 
 
-def load_data(filepath: str) -> pd.DataFrame:
-    """Load CSV data from filepath."""
-    path = Path(filepath)
-    if not path.exists():
-        raise FileNotFoundError(f"File not found: {filepath}")
-    return pd.read_csv(path)
-
-
-def enforce_dtypes(df: pd.DataFrame) -> pd.DataFrame:
-    """Enforce correct data types for DataCo dataset."""
-    df = df.copy()
-    if "Order Date" in df.columns:
-        df["Order Date"] = pd.to_datetime(df["Order Date"])
-    if "Shipping Date" in df.columns:
-        df["Shipping Date"] = pd.to_datetime(df["Shipping Date"])
+def load_data(path: str = "data/DataCoSupplyChainDataset.csv") -> pd.DataFrame:
+    """Load raw DataCo with dtype enforcement."""
+    dtype = {
+        "Type": "category",
+        "Shipping Mode": "category",
+        "Delivery Status": "category",
+        "Late_delivery_risk": "int8",
+    }
+    df = pd.read_csv(
+        path,
+        dtype=dtype,
+        parse_dates=["shipping date (DateOrders)", "order date (DateOrders)"],
+        encoding="latin-1",
+    )
     return df
 
 
-def calculate_tail_metrics(df: pd.DataFrame) -> dict:
-    """Calculate tail-risk metrics for supply chain."""
-    metrics = {
-        "p95_delay": (
-            np.percentile(df["Days for shipping (real)"], 95)
-            if "Days for shipping (real)" in df.columns
-            else None
-        ),
-        "late_delivery_rate": (
-            (df["Delivery Status"] == "Late delivery").mean()
-            if "Delivery Status" in df.columns
-            else None
-        ),
+def enforce_dtypes(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean + pipe-friendly."""
+    df = df.copy()
+    df.columns = [
+        col.strip().lower().replace(" ", "_").replace("(", "").replace(")", "")
+        for col in df.columns
+    ]
+    return df
+
+
+def calculate_tail_metrics(series: pd.Series, name: str = "metric") -> dict:
+    """Aerospace lens ngay từ đầu."""
+    return {
+        "mean": series.mean(),
+        "p50": series.quantile(0.5),
+        "p95": series.quantile(0.95),
+        "p99": series.quantile(0.99),
+        "p99.9": series.quantile(0.999),
+        "max": series.max(),
+        "dpmo_late": (series > 0).mean() * 1_000_000,
     }
-    return metrics
