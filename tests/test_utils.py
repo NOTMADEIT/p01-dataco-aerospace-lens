@@ -1,5 +1,5 @@
 import pandas as pd
-from src.utils import enforce_dtypes, calculate_tail_metrics
+from src.utils import load_data, enforce_dtypes, calculate_tail_metrics
 
 
 def test_enforce_dtypes():
@@ -20,9 +20,6 @@ def test_calculate_tail_metrics():
     assert "p95" in metrics
     assert "p99" in metrics
     assert 0 <= metrics["dpmo_late"] <= 1_000_000
-
-
-from src.utils import load_data
 
 
 def test_calculate_tail_metrics_real():
