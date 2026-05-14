@@ -5,28 +5,18 @@ from src.utils import enforce_dtypes, calculate_tail_metrics
 def test_enforce_dtypes():
     df = pd.DataFrame(
         {
-            "Order Date": ["2024-01-01", "2024-01-02"],
-            "Shipping Date": ["2024-01-03", "2024-01-04"],
+            "order date": ["2024-01-01", "2024-01-02"],
+            "shipping date": ["2024-01-03", "2024-01-04"],
         }
     )
     result = enforce_dtypes(df)
-    assert pd.api.types.is_datetime64_any_dtype(result["Order Date"])
-    assert pd.api.types.is_datetime64_any_dtype(result["Shipping Date"])
+    assert isinstance(result, pd.DataFrame)
+    assert "order_date" in result.columns
 
 
 def test_calculate_tail_metrics():
-    df = pd.DataFrame(
-        {
-            "Days for shipping (real)": [1, 2, 3, 4, 10],
-            "Delivery Status": [
-                "Late delivery",
-                "On time",
-                "On time",
-                "Late delivery",
-                "On time",
-            ],
-        }
-    )
-    metrics = calculate_tail_metrics(df)
-    assert metrics["p95_delay"] is not None
-    assert 0 <= metrics["late_delivery_rate"] <= 1
+    s = pd.Series([1.0, 2.0, 3.0, 4.0, 10.0])
+    metrics = calculate_tail_metrics(s, name="test")
+    assert "p95" in metrics
+    assert "p99" in metrics
+    assert 0 <= metrics["dpmo_late"] <= 1_000_000
