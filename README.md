@@ -21,3 +21,10 @@ This project applies supply chain analytics to the DataCo Global dataset through
 uv sync
 
 uv run pytest tests/ -v
+
+## Quick Start (Local)
+
+1. Download dataset → `data/DataCoSupplyChainDataset.csv`
+2. `uv sync`
+3. `uv run pytest`
+4. `uv run python -c "from src.utils import load_data; print(load_data().shape)"`
