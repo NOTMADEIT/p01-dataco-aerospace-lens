@@ -27,3 +27,14 @@ def test_calculate_tail_metrics_real():
     df = enforce_dtypes(df)
     metrics = calculate_tail_metrics(df["late_delivery_risk"])
     assert metrics["p99.9"] >= metrics["mean"]
+
+
+import pytest
+
+
+@pytest.mark.skip(reason="requires local dataset not in CI")
+def test_calculate_tail_metrics_real():
+    df = load_data()
+    df = enforce_dtypes(df)
+    metrics = calculate_tail_metrics(df["late_delivery_risk"])
+    assert metrics["p99.9"] >= metrics["mean"]
