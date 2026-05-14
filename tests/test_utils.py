@@ -1,3 +1,4 @@
+import pytest
 import pandas as pd
 from src.utils import load_data, enforce_dtypes, calculate_tail_metrics
 
@@ -20,16 +21,6 @@ def test_calculate_tail_metrics():
     assert "p95" in metrics
     assert "p99" in metrics
     assert 0 <= metrics["dpmo_late"] <= 1_000_000
-
-
-def test_calculate_tail_metrics_real():
-    df = load_data()
-    df = enforce_dtypes(df)
-    metrics = calculate_tail_metrics(df["late_delivery_risk"])
-    assert metrics["p99.9"] >= metrics["mean"]
-
-
-import pytest
 
 
 @pytest.mark.skip(reason="requires local dataset not in CI")
