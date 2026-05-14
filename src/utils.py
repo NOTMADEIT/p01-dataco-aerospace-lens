@@ -24,11 +24,15 @@ def enforce_dtypes(df: pd.DataFrame) -> pd.DataFrame:
 def calculate_tail_metrics(df: pd.DataFrame) -> dict:
     """Calculate tail-risk metrics for supply chain."""
     metrics = {
-        "p95_delay": np.percentile(df["Days for shipping (real)"], 95)
-        if "Days for shipping (real)" in df.columns
-        else None,
-        "late_delivery_rate": (df["Delivery Status"] == "Late delivery").mean()
-        if "Delivery Status" in df.columns
-        else None,
+        "p95_delay": (
+            np.percentile(df["Days for shipping (real)"], 95)
+            if "Days for shipping (real)" in df.columns
+            else None
+        ),
+        "late_delivery_rate": (
+            (df["Delivery Status"] == "Late delivery").mean()
+            if "Delivery Status" in df.columns
+            else None
+        ),
     }
     return metrics
